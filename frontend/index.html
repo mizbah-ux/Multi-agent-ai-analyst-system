@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Analyst Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                    <path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2z" fill="url(#grad1)"/>
+                    <path d="M14 7l2.5 5 5.5.8-4 3.9.95 5.5L14 19.5 9.05 22.2 10 16.7 6 12.8l5.5-.8L14 7z" fill="white" opacity="0.9"/>
+                    <defs>
+                        <linearGradient id="grad1" x1="2" y1="2" x2="26" y2="26" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#4285f4"/>
+                            <stop offset="50%" stop-color="#9c27b0"/>
+                            <stop offset="100%" stop-color="#ea4335"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="logo-text">AI Analyst</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav" >
+            <div class="nav-item active" onclick="showSection('dashboard')">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item" onclick="showSection('reports')">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg>
+                <span>Reports</span>
+            </div>
+            <div class="nav-item" onclick="showSection('history')">
+                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
+                <span>Task History</span>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <h1 class="page-title">Analysis Dashboard</h1>
+            <div class="topbar-actions">
+                <div class="avatar">A</div>
+            </div>
+        </header>
+
+        <div id="dashboardSection">
+        <!-- Content Grid -->
+        <div class="content-grid">
+
+            <!-- Left column: Upload + Task -->
+            <div class="left-col">
+
+                <!-- Upload Card -->
+                <div class="card upload-card" id="uploadCard">
+                    <div class="card-header">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                        <span>Upload Data File</span>
+                    </div>
+                    <div class="drop-zone" id="dropZone">
+                        <input type="file" id="fileInput" accept=".csv,.xlsx,.json,.txt" hidden>
+                        <div class="drop-icon">
+                            <svg viewBox="0 0 24 24" width="40" height="40"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13z" opacity="0.3"/><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM12 18l-4-4h2.5v-4h3v4H16l-4 4z"/></svg>
+                        </div>
+                        <p class="drop-text">Drag & drop or <span class="drop-link" onclick="document.getElementById('fileInput').click()">browse file</span></p>
+                        <p class="drop-hint">CSV, XLSX, JSON, TXT supported</p>
+                        <div class="file-selected" id="fileSelected" style="display:none">
+                            <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#34a853" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                            <span id="fileName"></span>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="uploadBtn" onclick="uploadFile()" disabled>
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+                        Upload File
+                    </button>
+                </div>
+
+                <!-- Task Card -->
+                <div class="card task-card">
+                    <div class="card-header">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                        <span>Analysis Request</span>
+                    </div>
+                    <div class="textarea-wrapper">
+                        <textarea id="taskInput" placeholder="Describe what you'd like to analyze…&#10;e.g. 'Summarize trends in Q3 revenue and highlight anomalies'" rows="4"></textarea>
+                    </div>
+                    <button type="button" class="btn btn-gemini" id="runBtn" onclick="createTask()" disabled>
+                        <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
+                        Run Analysis
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right column: Agents + Logs + Result -->
+            <div class="right-col">
+
+                <!-- Agents Card -->
+                <div class="card agents-card">
+                    <div class="card-header">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+                        <span>Agent Pipeline</span>
+                    </div>
+                    <div class="agents-pipeline">
+                        <div class="agent-node" id="agent-Data">
+                            <div class="agent-icon" style="--color: #4285f4">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 6h-2.18c.07-.44.18-.86.18-1.3C18 2.99 16.54 2 15 2c-.88 0-1.6.4-2.1 1.05L12 4.77l-.9-1.72C10.6 2.4 9.88 2 9 2 7.46 2 6 2.99 6 4.7c0 .44.11.86.18 1.3H4C2.9 6 2 6.9 2 8v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2z"/></svg>
+                            </div>
+                            <div class="agent-info">
+                                <span class="agent-name">Data Agent</span>
+                                <span class="agent-status-text" id="status-Data">Idle</span>
+                            </div>
+                            <div class="agent-badge" id="badge-Data"></div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="agent-node" id="agent-Analysis">
+                            <div class="agent-icon" style="--color: #9c27b0">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
+                            </div>
+                            <div class="agent-info">
+                                <span class="agent-name">Analysis Agent</span>
+                                <span class="agent-status-text" id="status-Analysis">Idle</span>
+                            </div>
+                            <div class="agent-badge" id="badge-Analysis"></div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="agent-node" id="agent-Visualization">
+                            <div class="agent-icon" style="--color: #fbbc04">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3.5 18.49l6-6.01 4 4L22 6.92l-1.41-1.41-7.09 7.97-4-4L2 16.99z"/></svg>
+                            </div>
+                            <div class="agent-info">
+                                <span class="agent-name">Visualization Agent</span>
+                                <span class="agent-status-text" id="status-Visualization">Idle</span>
+                            </div>
+                            <div class="agent-badge" id="badge-Visualization"></div>
+                        </div>
+                        <div class="pipeline-arrow">→</div>
+                        <div class="agent-node" id="agent-Report">
+                            <div class="agent-icon" style="--color: #34a853">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                            </div>
+                            <div class="agent-info">
+                                <span class="agent-name">Report Agent</span>
+                                <span class="agent-status-text" id="status-Report">Idle</span>
+                            </div>
+                            <div class="agent-badge" id="badge-Report"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logs Card -->
+                <div class="card logs-card">
+                    <div class="card-header">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>
+                        <span>Activity Log</span>
+                        <span class="log-count" id="logCount">0 events</span>
+                    </div>
+                    <div class="logs-container" id="logs">
+                        <div class="logs-empty">
+                            <svg viewBox="0 0 24 24" width="32" height="32" opacity="0.3"><path fill="currentColor" d="M20 3H4v10c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V5c0-1.11-.89-2-2-2zm0 5h-2V5h2v3zM4 19h16v2H4z"/></svg>
+                            <p>No activity yet. Run an analysis to see logs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Card -->
+                <div class="card result-card" id="resultCard" style="display:none">
+                    <div class="card-header">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                        <span>Analysis Result</span>
+                    </div>
+                    <div class="result-content" id="result"></div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+        <div id="reportsSection" style="display:none"></div>
+        <div id="historySection" style="display:none"></div>
+    </main>
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+
+    <div class="loading-box">
+
+        <div class="loading-spinner"></div>
+
+        <div class="loading-title" id="loadingTitle">
+            Processing...
+        </div>
+
+        <div class="loading-subtitle">
+            Please wait while the AI pipeline executes
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer"></div>
+
+<script src="toast.js"></script>
+<script src="loading.js"></script>
+<script src="app.js"></script>
+
+
+</body>
+</html>
