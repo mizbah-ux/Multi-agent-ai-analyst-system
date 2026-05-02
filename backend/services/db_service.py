@@ -1,13 +1,28 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import declarative_base
+from dotenv import load_dotenv
 
-# For now (simple):
-DATABASE_URL = "sqlite:///./app.db"
+import os
 
-# Later replace with RDS:
-# DATABASE_URL = "postgresql://user:password@host:port/db"
+load_dotenv()
 
-engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-
-SessionLocal = sessionmaker(bind=engine)
+DATABASE_URL = os.getenv("DATABASE_URL")
 Base = declarative_base()
+
+engine = create_engine(
+    DATABASE_URL,
+
+    pool_pre_ping=True,
+
+    pool_size=10,
+    max_overflow=20,
+
+    echo=False
+)
+
+SessionLocal = sessionmaker(
+    autocommit=False,
+    autoflush=False,
+    bind=engine
+)
