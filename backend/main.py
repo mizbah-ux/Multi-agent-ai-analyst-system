@@ -13,6 +13,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from routes.history import router as history_router
 from routes.download import router as download_router
 from routes.ppt import router as ppt_router
+from auth.routes import router as auth_router
 
 
 app = FastAPI(title="AI Analyst System")
@@ -40,6 +41,7 @@ app.include_router(logs_router)
 app.include_router(history_router)
 app.include_router(download_router)
 app.include_router(ppt_router)
+app.include_router(auth_router)
 
 @app.get("/")
 def root():

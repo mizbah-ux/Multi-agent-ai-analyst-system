@@ -1,7 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime
 from datetime import datetime
 from services.db_service import Base
-from sqlalchemy import Column, Integer, String, Text, DateTime
 from datetime import datetime
 
 
@@ -11,6 +10,8 @@ class Task(Base):
     __table_args__ = {"extend_existing": True}
 
     id = Column(Integer, primary_key=True)
+    user_id = Column(Integer)
+    
     user_input = Column(Text)
     file_id = Column(String)
     status = Column(String, default="pending")
@@ -28,4 +29,23 @@ class Log(Base):
     status = Column(String)  # running / completed / failed
     timestamp = Column(DateTime, default=datetime.utcnow)
 
+class User(Base):
 
+    __tablename__ = "users"
+
+    id = Column(
+        Integer,
+        primary_key=True,
+        index=True
+    )
+
+    email = Column(
+        String,
+        unique=True,
+        nullable=False
+    )
+
+    hashed_password = Column(
+        String,
+        nullable=False
+    )

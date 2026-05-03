@@ -1,5 +1,30 @@
 const API = "http://127.0.0.1:8000";
 
+function authHeaders() {
+
+    const token =
+        localStorage.getItem(
+            "access_token"
+        );
+
+    if (!token) {
+
+        showToast(
+            "Please login first",
+            "warning"
+        );
+
+        throw new Error(
+            "No authentication token"
+        );
+    }
+
+    return {
+        Authorization:
+            `Bearer ${token}`
+    };
+}
+
 let fileId = null;
 let taskId = null;
 let pollInterval = null;
@@ -83,7 +108,7 @@ async function uploadFile() {
         const formData = new FormData();
         formData.append("file", file);
 
-        const res = await fetch(API + "/upload", { method: "POST", body: formData });
+        const res = await fetch(API + "/upload", { method: "POST", headers: authHeaders(), body: formData });
         if (!res.ok) throw new Error(`Upload failed: ${res.status}`);
 
         const data = await res.json();
@@ -126,7 +151,7 @@ async function createTask() {
     try {
         const res = await fetch(API + "/task/create", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { ...authHeaders(),"Content-Type": "application/json" },
             body: JSON.stringify({ user_input: input, file_id: fileId })
         });
 
@@ -149,7 +174,7 @@ async function createTask() {
 function pollLogs() {
     pollInterval = setInterval(async () => {
         try {
-            const res = await fetch(API + `/task/${taskId}/logs`);
+            const res = await fetch(API + `/task/${taskId}/logs`, {headers: authHeaders()});
             if (!res.ok) return; // transient error — keep polling
 
             const logs = await res.json();
@@ -258,7 +283,7 @@ function pollLogs() {
 // ── Fetch final result ──────────────────────────────────────────
 async function fetchResult() {
     try {
-        const res = await fetch(API + `/task/${taskId}/result`);
+        const res = await fetch(API + `/task/${taskId}/result`, {headers: authHeaders()});
         if (!res.ok) return;
 
         const data = await res.json();
@@ -642,7 +667,7 @@ function showSection(section) {
 // ── LoadHistory ───────────────────────────────────────────────────
 async function loadHistory() {
 
-    const res = await fetch(API + "/tasks");
+    const res = await fetch(API + "/tasks", {headers: authHeaders() });
 
     const tasks = await res.json();
 
@@ -715,7 +740,7 @@ async function loadHistory() {
                         task.result
                         ? `
                         <a
-                            href="${API}/download?path=${task.result}"
+                            href="${API}/download/${task.id}/pdf"
                             target="_blank"
                             class="history-btn download"
                         >
@@ -729,7 +754,7 @@ async function loadHistory() {
                         task.ppt
                         ? `
                         <a
-                            href="${API}/download?path=${task.ppt}"
+                            href="${API}/download/${task.id}/ppt"
                             target="_blank"
                             class="history-btn ppt"
                         >
@@ -748,7 +773,7 @@ async function loadHistory() {
 // ── LoadReport ───────────────────────────────────────────────────
 async function loadReports() {
 
-    const res = await fetch(API + "/tasks");
+    const res = await fetch(API + "/tasks", {headers: authHeaders()});
     const tasks = await res.json();
 
     const container =
@@ -828,6 +853,95 @@ function viewTask(id) {
     pollLogs();
     showSection("dashboard");
 }
+
+// ── Log in Logic ───────────────────────────────────────────────────
+
+async function login() {
+
+    const email =
+        document.getElementById("email").value;
+
+    const password =
+        document.getElementById("password").value;
+
+    const res = await fetch(
+        API + "/login",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type":
+                    "application/json"
+            },
+
+            body: JSON.stringify({
+                email,
+                password
+            })
+        }
+    );
+
+    const data = await res.json();
+
+    if (data.access_token) {
+
+        saveToken(data.access_token);
+
+        showToast(
+            "Login successful",
+            "success"
+        );
+
+        document.getElementById(
+            "authSection"
+        ).style.display = "none";
+    }
+
+    else {
+
+        showToast(
+            "Login failed",
+            "error"
+        );
+    }
+}
+
+function saveToken(token) {
+
+    localStorage.setItem(
+        "access_token",
+        token
+    );
+}
+
+// ── Log out ───────────────────────────────────────────────────
+
+function logout() {
+
+    localStorage.removeItem(
+        "access_token"
+    );
+
+    location.reload();
+}
+
+window.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        const token =
+            localStorage.getItem(
+                "access_token"
+            );
+
+        if (token) {
+
+            document.getElementById(
+                "authSection"
+            ).style.display = "none";
+        }
+    }
+);
 
 window.onload = () => {
     loadHistory();

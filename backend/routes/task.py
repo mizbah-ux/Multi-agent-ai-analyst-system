@@ -1,15 +1,21 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException , Depends
 from services.db_service import SessionLocal
 from models.schemas import Task
-import requests   # keep this at top
+import requests
+from auth.dependencies import get_current_user
+from models.schemas import User
 
 router = APIRouter()
 
-N8N_WEBHOOK = "http://localhost:5678/webhook-test/run-task"  # use test for now
+N8N_WEBHOOK = "http://localhost:5678/webhook-test/run-task"
 
 
 @router.post("/task/create")
-def create_task(data: dict):
+def create_task(
+    data: dict,
+    current_user: User = Depends(
+        get_current_user
+    )):
     user_input = data.get("user_input")
     file_id = data.get("file_id")
 
@@ -19,6 +25,7 @@ def create_task(data: dict):
     db = SessionLocal()
 
     task = Task(
+        user_id=current_user.id,
         user_input=user_input,
         file_id=file_id,
         status="pending"

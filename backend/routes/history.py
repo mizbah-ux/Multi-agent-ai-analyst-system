@@ -1,13 +1,21 @@
-from fastapi import APIRouter
+from fastapi import APIRouter , HTTPException , Depends
 from services.db_service import SessionLocal
 from models.schemas import Task
+from auth.dependencies import (get_current_user)
+from models.schemas import User
 
 router = APIRouter()
 
 @router.get("/tasks")
-def get_tasks():
+def get_tasks(
+        current_user: User = Depends(
+            get_current_user
+        )
+    ):
     db = SessionLocal()
-    tasks = db.query(Task).order_by(Task.id.desc()).all()
+    tasks = db.query(Task).filter(
+        Task.user_id == current_user.id
+    ).all()
     db.close()
 
     return [
