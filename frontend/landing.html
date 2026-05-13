@@ -3,118 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightForge AI - Welcome</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        .landing-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            text-align: center;
-            color: white;
-        }
-        .landing-content {
-            max-width: 600px;
-            padding: 40px;
-        }
-        .landing-content h1 {
-            font-size: 48px;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        .landing-content p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-        .cta-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .btn {
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-primary {
-            background: white;
-            color: #667eea;
-        }
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .btn-secondary {
-            background: transparent;
-            color: white;
-            border: 2px solid white;
-        }
-        .btn-secondary:hover {
-            background: white;
-            color: #667eea;
-        }
-        .features {
-            margin-top: 60px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-            max-width: 800px;
-        }
-        .feature {
-            text-align: center;
-        }
-        .feature h3 {
-            margin-bottom: 10px;
-            font-size: 20px;
-        }
-        .feature p {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-    </style>
+    <title>InsightForge AI | Autonomous Work OS</title>
+    <meta name="description" content="A cinematic AI operating system for autonomous multi-agent work.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-    <div class="landing-container">
-        <div class="landing-content">
-            <h1>InsightForge AI</h1>
-            <p>Transform raw data into decision-ready intelligence with a multi-agent analytics workflow.</p>
-            
-            <div class="cta-buttons">
-                <a href="login.html" class="btn btn-primary">Sign In</a>
-                <a href="signup.html" class="btn btn-secondary">Sign Up</a>
+    <canvas id="ai-os-canvas" aria-hidden="true"></canvas>
+    <div class="noise-layer" aria-hidden="true"></div>
+    <div class="scanlines" aria-hidden="true"></div>
+    <div class="cursor-orbit" aria-hidden="true"></div>
+
+    <header class="landing-nav">
+        <a class="brand-sigil" href="landing.html" aria-label="InsightForge AI home">
+            <span class="sigil-core"></span>
+            <span>InsightForge AI</span>
+        </a>
+        <nav aria-label="Primary navigation">
+            <a href="#orchestration">Agents</a>
+            <a href="#execution">Autonomy</a>
+            <a href="#future">Launch</a>
+        </nav>
+        <a class="nav-cta magnetic" href="login.html">Enter OS</a>
+    </header>
+
+    <main id="smooth-content">
+        <section class="story-section hero-panel" data-chapter="chaos">
+            <div class="chapter-kicker">01 / Digital Chaos</div>
+            <h1>Modern work is fragmented.</h1>
+            <p class="hero-copy">Humans manage tools. AI should manage workflows.</p>
+            <div class="system-readout">
+                <span>Overload detected</span>
+                <span>12,804 events/min</span>
+                <span>Disconnected APIs</span>
             </div>
-            
-            <div class="features">
-                <div class="feature">
-                    <h3>Data Analysis</h3>
-                    <p>Advanced statistical analysis and insights</p>
-                </div>
-                <div class="feature">
-                    <h3>Visualizations</h3>
-                    <p>Beautiful charts and graphs automatically generated</p>
-                </div>
-                <div class="feature">
-                    <h3>Reports</h3>
-                    <p>Professional reports in PDF and PowerPoint formats</p>
-                </div>
-                <div class="feature">
-                    <h3>AI-Powered</h3>
-                    <p>Machine learning algorithms for deep insights</p>
-                </div>
+        </section>
+
+        <section class="story-section split-panel" data-chapter="core">
+            <div class="chapter-kicker">02 / Birth Of The Core</div>
+            <h2>One instruction. Infinite coordination.</h2>
+            <div class="command-console">
+                <span class="console-dot"></span>
+                <span>Launch product campaign</span>
             </div>
+            <div class="task-stream" aria-label="Autonomous subtasks">
+                <span>Market research</span>
+                <span>Email workflows</span>
+                <span>Social automation</span>
+                <span>Analytics setup</span>
+                <span>CRM synchronization</span>
+                <span>Executive reporting</span>
+            </div>
+        </section>
+
+        <section id="orchestration" class="story-section agent-panel" data-chapter="agents">
+            <div class="chapter-kicker">03 / Multi-Agent Orchestration</div>
+            <div class="agent-words" aria-label="Agent journey">
+                <span>Plan.</span>
+                <span>Execute.</span>
+                <span>Analyze.</span>
+                <span>Optimize.</span>
+            </div>
+            <div class="agent-grid">
+                <article class="agent-card magnetic">
+                    <span>Planner Agent</span>
+                    <strong>Blueprint engine</strong>
+                </article>
+                <article class="agent-card magnetic">
+                    <span>Supervisor Agent</span>
+                    <strong>Governance rings</strong>
+                </article>
+                <article class="agent-card magnetic">
+                    <span>Executor Agent</span>
+                    <strong>Deployment pipelines</strong>
+                </article>
+                <article class="agent-card magnetic">
+                    <span>Analyst Agent</span>
+                    <strong>Insight galaxies</strong>
+                </article>
+            </div>
+        </section>
+
+        <section id="execution" class="story-section execution-panel" data-chapter="execution">
+            <div class="chapter-kicker">04 / Autonomous Execution</div>
+            <h2>Your operations. Running autonomously.</h2>
+            <div class="world-ops">
+                <span>New York</span>
+                <span>London</span>
+                <span>Bangalore</span>
+                <span>Tokyo</span>
+                <span>Singapore</span>
+                <span>Dubai</span>
+            </div>
+        </section>
+
+        <section class="story-section evolution-panel" data-chapter="evolution">
+            <div class="chapter-kicker">05 / Self-Evolving Intelligence</div>
+            <h2>Every workflow makes the system smarter.</h2>
+            <p>Neural pathways rewrite. Operations heal. Patterns compound into a living infrastructure for autonomous work.</p>
+        </section>
+
+        <section id="future" class="story-section finale-panel" data-chapter="civilization">
+            <div class="chapter-kicker">06 / Digital Civilization</div>
+            <h2>The Future Operating System for Autonomous Work.</h2>
+            <p>This is not software. This is the future workforce.</p>
+            <div class="cta-row">
+                <a class="primary-cta magnetic" href="signup.html">Build Your AI Workforce</a>
+                <a class="secondary-cta magnetic" href="login.html">Launch the Platform</a>
+            </div>
+        </section>
+    </main>
+
+    <aside class="hud-panel" aria-hidden="true">
+        <div class="hud-ring"></div>
+        <div>
+            <span class="hud-label">Autonomous OS</span>
+            <strong id="hudStage">Chaos Field</strong>
         </div>
-    </div>
+    </aside>
+
+    <script type="module" src="landing.js"></script>
 </body>
 </html>
