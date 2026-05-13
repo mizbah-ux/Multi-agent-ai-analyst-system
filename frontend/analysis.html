@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Dashboard - InsightForge AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .skeleton { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
+        .chart-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .chart-card:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .spinner { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <svg class="w-8 h-8 text-blue-600 mr-3" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                    </svg>
+                    <h1 class="text-xl font-semibold text-gray-900">Analysis Dashboard</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span id="taskIdDisplay" class="text-sm text-gray-500"></span>
+                    <button onclick="refreshData()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 4v6h-6M1 20v-6h6M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden">
+            <div class="flex flex-col items-center justify-center py-20">
+                <div class="spinner mb-4"></div>
+                <p class="text-gray-600 text-lg">Loading analysis results...</p>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+                <svg class="w-12 h-12 text-red-600 mx-auto mb-4" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+                </svg>
+                <h3 class="text-lg font-medium text-red-800 mb-2">Error Loading Data</h3>
+                <p id="errorMessage" class="text-red-600"></p>
+                <button onclick="refreshData()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardContent" class="hidden space-y-8">
+            <!-- Summary Cards -->
+            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white rounded-lg shadow p-6 fade-in">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-blue-100 rounded-lg">
+                            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Rows</p>
+                            <p id="rowCount" class="text-2xl font-semibold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 fade-in" style="animation-delay: 0.1s">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-lg">
+                            <svg class="w-6 h-6 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Total Columns</p>
+                            <p id="columnCount" class="text-2xl font-semibold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 fade-in" style="animation-delay: 0.2s">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-purple-100 rounded-lg">
+                            <svg class="w-6 h-6 text-purple-600" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Numeric Columns</p>
+                            <p id="numericCount" class="text-2xl font-semibold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-6 fade-in" style="animation-delay: 0.3s">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-orange-100 rounded-lg">
+                            <svg class="w-6 h-6 text-orange-600" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M12 2l-5.5 9h11z M17.5 11L12 20l5.5-9z M6.5 11L12 20l-5.5-9z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-600">Categorical Columns</p>
+                            <p id="categoricalCount" class="text-2xl font-semibold text-gray-900">-</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section id="chartsSection" class="hidden">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Generated Charts</h2>
+                <div id="chartsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Charts will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Numeric Summary Table -->
+            <section id="numericSection" class="hidden">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Numeric Summary</h2>
+                <div class="bg-white shadow rounded-lg overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Column Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mean</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Min</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Max</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Median</th>
+                                </tr>
+                            </thead>
+                            <tbody id="numericTableBody" class="bg-white divide-y divide-gray-200">
+                                <!-- Numeric data will be dynamically inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categorical Insights -->
+            <section id="categoricalSection" class="hidden">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Categorical Insights</h2>
+                <div id="categoricalGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Categorical data will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Export Buttons -->
+            <section id="exportSection" class="hidden">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Export Reports</h2>
+                <div class="flex flex-wrap gap-4">
+                    <button id="pdfBtn" onclick="downloadReport('pdf')" class="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+                        </svg>
+                        Download PDF Report
+                    </button>
+                    <button id="pptBtn" onclick="downloadReport('ppt')" class="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors flex items-center">
+                        <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M7 2v11h3v9l7-12h-4l4-8z"/>
+                        </svg>
+                        Download PowerPoint
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        let currentTaskId = null;
+        let analysisData = null;
+
+        // Get task_id from URL parameters
+        function getTaskId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('task_id');
+        }
+
+        // Show/hide different states
+        function showState(state) {
+            document.getElementById('loadingState').classList.add('hidden');
+            document.getElementById('errorState').classList.add('hidden');
+            document.getElementById('dashboardContent').classList.add('hidden');
+
+            if (state === 'loading') {
+                document.getElementById('loadingState').classList.remove('hidden');
+            } else if (state === 'error') {
+                document.getElementById('errorState').classList.remove('hidden');
+            } else if (state === 'dashboard') {
+                document.getElementById('dashboardContent').classList.remove('hidden');
+            }
+        }
+
+        // Fetch analysis data from API
+        async function fetchAnalysisData(taskId) {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Authentication required. Please login first.');
+            }
+
+            const response = await fetch(`http://localhost:8000/task/${taskId}/result`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                if (response.status === 401) {
+                    throw new Error('Unauthorized. Please login again.');
+                } else if (response.status === 403) {
+                    throw new Error('Access denied. You do not have permission to view this task.');
+                } else if (response.status === 404) {
+                    throw new Error('Task not found or analysis not completed yet.');
+                } else {
+                    throw new Error(`Failed to fetch data: ${response.statusText}`);
+                }
+            }
+
+            const data = await response.json();
+            
+            // Handle the actual API response format
+            if (data.result) {
+                try {
+                    const parsedResult = JSON.parse(data.result);
+                    // Transform to match expected format
+                    return {
+                        analysis: parsedResult.analysis || {
+                            row_count: parsedResult.row_count || 0,
+                            column_count: parsedResult.column_count || 0,
+                            numeric_summary: parsedResult.numeric_summary || {},
+                            categorical_summary: parsedResult.categorical_summary || {}
+                        },
+                        charts: parsedResult.charts || [],
+                        report: parsedResult.report || null,
+                        ppt: parsedResult.ppt || null
+                    };
+                } catch (e) {
+                    // If parsing fails, return as-is
+                    return {
+                        analysis: {
+                            row_count: 0,
+                            column_count: 0,
+                            numeric_summary: {},
+                            categorical_summary: {}
+                        },
+                        charts: [],
+                        report: null,
+                        ppt: null
+                    };
+                }
+            }
+            
+            return null;
+        }
+
+        // Render summary cards
+        function renderSummaryCards(analysis) {
+            document.getElementById('rowCount').textContent = analysis.row_count || 0;
+            document.getElementById('columnCount').textContent = analysis.column_count || 0;
+            
+            const numericCount = analysis.numeric_summary ? Object.keys(analysis.numeric_summary).length : 0;
+            const categoricalCount = analysis.categorical_summary ? Object.keys(analysis.categorical_summary).length : 0;
+            
+            document.getElementById('numericCount').textContent = numericCount;
+            document.getElementById('categoricalCount').textContent = categoricalCount;
+        }
+
+        // Render charts
+        function renderCharts(charts) {
+            if (!charts || charts.length === 0) {
+                document.getElementById('chartsSection').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('chartsSection').classList.remove('hidden');
+            const chartsGrid = document.getElementById('chartsGrid');
+            chartsGrid.innerHTML = '';
+
+            charts.forEach((chartUrl, index) => {
+                const chartCard = document.createElement('div');
+                chartCard.className = 'chart-card bg-white rounded-lg shadow overflow-hidden fade-in';
+                chartCard.style.animationDelay = `${index * 0.1}s`;
+                
+                chartCard.innerHTML = `
+                    <div class="p-4">
+                        <img src="${chartUrl}" alt="Chart ${index + 1}" class="w-full h-auto rounded-lg" 
+                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjQwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0yMCAxNkMxOC4yIDE2IDE2LjggMTcuNiAxNi44IDE5LjRDMTYuOCAyMS4yIDE4LjIgMjIuOCAyMCAyMi44QzIxLjggMjIuOCAyMy4yIDIxLjIgMjMuMiAxOS40QzIzLjIgMTcuNiAyMS44IDE2IDIwIDE2WiIgZmlsbD0iIzlDQTNBQiIvPgo8L3N2Zz4K'">
+                        <p class="text-center text-sm text-gray-600 mt-2">Chart ${index + 1}</p>
+                    </div>
+                `;
+                
+                chartsGrid.appendChild(chartCard);
+            });
+        }
+
+        // Render numeric summary table
+        function renderNumericSummary(numericSummary) {
+            if (!numericSummary || Object.keys(numericSummary).length === 0) {
+                document.getElementById('numericSection').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('numericSection').classList.remove('hidden');
+            const tbody = document.getElementById('numericTableBody');
+            tbody.innerHTML = '';
+
+            Object.entries(numericSummary).forEach(([column, stats]) => {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${column}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${stats.mean?.toFixed(2) || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${stats.min || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${stats.max || '-'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${stats.median?.toFixed(2) || '-'}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Render categorical insights
+        function renderCategoricalInsights(categoricalSummary) {
+            if (!categoricalSummary || Object.keys(categoricalSummary).length === 0) {
+                document.getElementById('categoricalSection').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('categoricalSection').classList.remove('hidden');
+            const grid = document.getElementById('categoricalGrid');
+            grid.innerHTML = '';
+
+            Object.entries(categoricalSummary).forEach(([column, values]) => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow p-6 fade-in';
+                
+                const sortedValues = Object.entries(values).sort((a, b) => b[1] - a[1]).slice(0, 5);
+                const maxValue = Math.max(...Object.values(values));
+                
+                let valuesHtml = '';
+                sortedValues.forEach(([value, count]) => {
+                    const percentage = (count / maxValue) * 100;
+                    valuesHtml += `
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm text-gray-700">${value}</span>
+                            <span class="text-sm font-medium text-gray-900">${count}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-3">
+                            <div class="bg-blue-600 h-2 rounded-full transition-all duration-500" style="width: ${percentage}%"></div>
+                        </div>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">${column}</h3>
+                    <div class="space-y-1">
+                        ${valuesHtml}
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
+        }
+
+        // Setup export buttons
+        function setupExportButtons(reportUrl, pptUrl) {
+            if (!reportUrl && !pptUrl) {
+                document.getElementById('exportSection').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('exportSection').classList.remove('hidden');
+            
+            const pdfBtn = document.getElementById('pdfBtn');
+            const pptBtn = document.getElementById('pptBtn');
+            
+            pdfBtn.disabled = !reportUrl;
+            pptBtn.disabled = !pptUrl;
+            
+            if (!reportUrl) pdfBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            if (!pptUrl) pptBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            
+            // Store URLs for download functions
+            pdfBtn.dataset.url = reportUrl;
+            pptBtn.dataset.url = pptUrl;
+        }
+
+        // Download report
+        function downloadReport(type) {
+            const btn = type === 'pdf' ? document.getElementById('pdfBtn') : document.getElementById('pptBtn');
+            const url = btn.dataset.url;
+            
+            if (!url) return;
+            
+            window.open(url, '_blank');
+        }
+
+        // Main render function
+        function renderDashboard(data) {
+            if (!data) {
+                throw new Error('No analysis data available');
+            }
+
+            analysisData = data;
+            
+            // Render all sections
+            renderSummaryCards(data.analysis);
+            renderCharts(data.charts);
+            renderNumericSummary(data.analysis.numeric_summary);
+            renderCategoricalInsights(data.analysis.categorical_summary);
+            setupExportButtons(data.report, data.ppt);
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                showState('loading');
+                
+                currentTaskId = getTaskId();
+                if (!currentTaskId) {
+                    throw new Error('No task_id provided in URL. Please use: analysis.html?task_id=123');
+                }
+
+                document.getElementById('taskIdDisplay').textContent = `Task ID: ${currentTaskId}`;
+                
+                const data = await fetchAnalysisData(currentTaskId);
+                renderDashboard(data);
+                showState('dashboard');
+                
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('errorMessage').textContent = error.message;
+                showState('error');
+            }
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadDashboard();
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>

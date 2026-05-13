@@ -1,8 +1,8 @@
-from fastapi import APIRouter, UploadFile, File, HTTPException , Depends
+from fastapi import APIRouter, UploadFile, File, HTTPException , Depends , Security
 import os
 import uuid
 import pandas as pd
-from auth.dependencies import (get_current_user)
+from auth.dependencies import get_current_user
 from models.schemas import User
 
 router = APIRouter()
@@ -14,13 +14,10 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 
 @router.post("/upload")
-@router.post("/upload")
 async def upload_file(
-        file: UploadFile = File(...),
-        current_user: User = Depends(
-            get_current_user
-        )
-    ):
+    file: UploadFile = File(...),
+    current_user: User = Security(get_current_user)
+):
     if not file.filename:
         raise HTTPException(status_code=400, detail="No file provided")
 

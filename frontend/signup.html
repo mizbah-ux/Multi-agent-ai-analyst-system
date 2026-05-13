@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - InsightForge AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .auth-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3367d6;
+        }
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        .auth-footer a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #d93025;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .success-message {
+            color: #1e8e3e;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join InsightForge AI to start analyzing your data</p>
+            </div>
+            
+            <form id="signupForm" onsubmit="handleSignup(event)">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    <div id="emailError" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Create a password">
+                    <div id="passwordError" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Confirm your password">
+                    <div id="confirmPasswordError" class="error-message"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="signupBtn">
+                    Sign Up
+                </button>
+                
+                <div id="successMessage" class="success-message"></div>
+            </form>
+            
+            <div class="auth-footer">
+                Already have an account? <a href="login.html">Sign In</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script src="toast.js"></script>
+    <script>
+        let API = localStorage.getItem("api_base_url") || "http://localhost:8000";
+
+        async function resolveApiBase() {
+            const candidates = [
+                API,
+                "http://127.0.0.1:8000",
+                "http://localhost:8001",
+                "http://127.0.0.1:8001"
+            ].filter((v, i, arr) => v && arr.indexOf(v) === i);
+
+            for (const candidate of candidates) {
+                try {
+                    const response = await fetch(candidate + "/", { method: "GET" });
+                    if (response.ok) {
+                        API = candidate;
+                        localStorage.setItem("api_base_url", candidate);
+                        return API;
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+
+            return API;
+        }
+
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            let isValid = true;
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            
+            // Validate email
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password || password.length < 6) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 6 characters long';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password confirmation
+            if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const signupBtn = document.getElementById('signupBtn');
+            const originalText = signupBtn.textContent;
+            
+            // Show loading state
+            signupBtn.textContent = 'Creating Account...';
+            signupBtn.disabled = true;
+            
+            try {
+                await resolveApiBase();
+                console.log('Attempting signup with:', { email, password });
+                console.log('API URL:', API + '/signup');
+                
+                const response = await fetch(API + '/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+                
+                console.log('Signup response status:', response.status);
+                
+                const data = await response.json();
+                console.log('Signup response data:', data);
+                
+                if (response.ok) {
+                    document.getElementById('successMessage').textContent = 'Account created successfully! Redirecting to login...';
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    showToast('Account created successfully!', 'success');
+                    
+                    // Redirect to login after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    
+                } else {
+                    // Show error message
+                    const errorMessage = data.detail || 'Signup failed';
+                    document.getElementById('emailError').textContent = errorMessage;
+                    document.getElementById('emailError').style.display = 'block';
+                    
+                    showToast(errorMessage, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Signup error:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack
+                });
+                
+                showToast(`Network error: ${error.message}`, 'error');
+                document.getElementById('emailError').textContent = 'Network error. Please try again.';
+                document.getElementById('emailError').style.display = 'block';
+                
+            } finally {
+                // Reset button state
+                signupBtn.textContent = originalText;
+                signupBtn.disabled = false;
+            }
+        }
+
+        // Test API connection
+        async function testConnection() {
+            try {
+                await resolveApiBase();
+                const response = await fetch(API + '/');
+                const data = await response.json();
+                console.log('API Connection Test:', data);
+                return true;
+            } catch (error) {
+                console.error('API Connection Test Failed:', error);
+                return false;
+            }
+        }
+
+        // Test connection on page load
+        window.addEventListener('load', () => {
+            resolveApiBase().then(() => testConnection());
+        });
+    </script>
+</body>
+</html>

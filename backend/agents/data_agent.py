@@ -1,4 +1,5 @@
 import pandas as pd
+from fastapi import Header, HTTPException
 import os
 
 UPLOAD_DIR = "uploads"
@@ -60,3 +61,17 @@ def run_data_cleaning(file_id: str):
         "columns": list(df.columns),
         "cleaned_file_path": clean_path
     }
+
+INTERNAL_API_KEY = "internal-secret"
+
+
+def verify_internal_key(
+    x_internal_key: str = Header(None)
+):
+
+    if x_internal_key != INTERNAL_API_KEY:
+
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized"
+        )

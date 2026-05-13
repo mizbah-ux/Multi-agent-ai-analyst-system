@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InsightForge AI - Welcome</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .landing-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            color: white;
+        }
+        .landing-content {
+            max-width: 600px;
+            padding: 40px;
+        }
+        .landing-content h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        .landing-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: white;
+            color: #667eea;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        .features {
+            margin-top: 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            max-width: 800px;
+        }
+        .feature {
+            text-align: center;
+        }
+        .feature h3 {
+            margin-bottom: 10px;
+            font-size: 20px;
+        }
+        .feature p {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="landing-container">
+        <div class="landing-content">
+            <h1>InsightForge AI</h1>
+            <p>Transform raw data into decision-ready intelligence with a multi-agent analytics workflow.</p>
+            
+            <div class="cta-buttons">
+                <a href="login.html" class="btn btn-primary">Sign In</a>
+                <a href="signup.html" class="btn btn-secondary">Sign Up</a>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <h3>Data Analysis</h3>
+                    <p>Advanced statistical analysis and insights</p>
+                </div>
+                <div class="feature">
+                    <h3>Visualizations</h3>
+                    <p>Beautiful charts and graphs automatically generated</p>
+                </div>
+                <div class="feature">
+                    <h3>Reports</h3>
+                    <p>Professional reports in PDF and PowerPoint formats</p>
+                </div>
+                <div class="feature">
+                    <h3>AI-Powered</h3>
+                    <p>Machine learning algorithms for deep insights</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

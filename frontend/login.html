@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - InsightForge AI</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .auth-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .auth-header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #4285f4;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background: #4285f4;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #3367d6;
+        }
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            margin-top: 10px;
+        }
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+        }
+        .auth-footer a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+        .error-message {
+            color: #d93025;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        .demo-credentials {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        .demo-credentials h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .demo-credentials p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .demo-credentials code {
+            background: #e9ecef;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Welcome Back</h1>
+                <p>Sign in to your InsightForge AI account</p>
+            </div>
+            
+            <div class="demo-credentials">
+                <h4>Demo Credentials</h4>
+                <p>Admin: <code>admin@test.com</code> / <code>admin</code></p>
+                <p>User: <code>user@test.com</code> / <code>user</code></p>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                    <div id="emailError" class="error-message"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                    <div id="passwordError" class="error-message"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    Sign In
+                </button>
+                
+                <button type="button" class="btn btn-secondary" onclick="testConnection()">
+                    Test API Connection
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                Don't have an account? <a href="signup.html">Sign Up</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+
+    <script src="toast.js"></script>
+    <script>
+        let API = localStorage.getItem("api_base_url") || "http://localhost:8000";
+
+        async function resolveApiBase() {
+            const candidates = [
+                API,
+                "http://127.0.0.1:8000",
+                "http://localhost:8001",
+                "http://127.0.0.1:8001"
+            ].filter((v, i, arr) => v && arr.indexOf(v) === i);
+
+            for (const candidate of candidates) {
+                try {
+                    const response = await fetch(candidate + "/", { method: "GET" });
+                    if (response.ok) {
+                        API = candidate;
+                        localStorage.setItem("api_base_url", candidate);
+                        return API;
+                    }
+                } catch (error) {
+                    continue;
+                }
+            }
+
+            return API;
+        }
+
+        function validateForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            let isValid = true;
+            
+            // Reset error messages
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            
+            // Validate email
+            if (!email || !email.includes('@')) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                document.getElementById('emailError').style.display = 'block';
+                isValid = false;
+            }
+            
+            // Validate password
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Please enter your password';
+                document.getElementById('passwordError').style.display = 'block';
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.textContent;
+            
+            // Show loading state
+            loginBtn.textContent = 'Signing In...';
+            loginBtn.disabled = true;
+            
+            try {
+                await resolveApiBase();
+                console.log('Attempting login with:', { email, password });
+                console.log('API URL:', API + '/login');
+                console.log('Current page protocol:', window.location.protocol);
+                
+                const response = await fetch(API + '/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email,
+                        password
+                    })
+                });
+                
+                console.log('Login response status:', response.status);
+                console.log('Login response headers:', response.headers);
+                
+                const data = await response.json();
+                console.log('Login response data:', data);
+                
+                if (response.ok && data.access_token) {
+                    // Store tokens
+                    localStorage.setItem('access_token', data.access_token);
+                    localStorage.setItem('refresh_token', data.refresh_token);
+                    localStorage.setItem('role', data.role);
+                    
+                    console.log('Tokens stored:', {
+                        access_token: data.access_token ? 'exists' : 'missing',
+                        refresh_token: data.refresh_token ? 'exists' : 'missing',
+                        role: data.role
+                    });
+                    
+                    showToast('Login successful! Redirecting to dashboard...', 'success');
+                    
+                    // Redirect to dashboard after 1 second
+                    setTimeout(() => {
+                        console.log('Redirecting to index.html...');
+                        window.location.href = 'index.html';
+                    }, 1000);
+                    
+                } else {
+                    // Show error message
+                    const errorMessage = data.detail || 'Login failed';
+                    document.getElementById('passwordError').textContent = errorMessage;
+                    document.getElementById('passwordError').style.display = 'block';
+                    
+                    showToast(errorMessage, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    name: error.name,
+                    stack: error.stack
+                });
+                
+                showToast(`Network error: ${error.message}. Check browser console for details.`, 'error');
+                document.getElementById('passwordError').textContent = 'Network error. Please check your connection.';
+                document.getElementById('passwordError').style.display = 'block';
+                
+            } finally {
+                // Reset button state
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
+            }
+        }
+
+        async function testConnection() {
+            console.log('Testing API connection...');
+            await resolveApiBase();
+            console.log('API URL:', API);
+            console.log('Current origin:', window.location.origin);
+            
+            try {
+                // Test basic API connectivity
+                const response = await fetch(API + '/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                console.log('Basic API test - Status:', response.status);
+                const data = await response.json();
+                console.log('Basic API test - Data:', data);
+                
+                // Test login endpoint
+                const loginResponse = await fetch(API + '/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: 'admin@test.com',
+                        password: 'admin'
+                    })
+                });
+                
+                console.log('Login test - Status:', loginResponse.status);
+                const loginData = await loginResponse.json();
+                console.log('Login test - Data:', loginData);
+                
+                if (loginResponse.ok) {
+                    showToast('API Connection Test Successful!', 'success');
+                } else {
+                    showToast(`API Test Failed: ${loginData.detail || loginResponse.statusText}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('Connection test error:', error);
+                showToast(`Connection Test Failed: ${error.message}`, 'error');
+            }
+        }
+
+        // Check if user is already logged in
+        function checkAuthStatus() {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                // User is already logged in, redirect to dashboard
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Test API connection on page load
+        window.addEventListener('load', () => {
+            checkAuthStatus();
+            resolveApiBase().then(() => testConnection());
+        });
+    </script>
+</body>
+</html>

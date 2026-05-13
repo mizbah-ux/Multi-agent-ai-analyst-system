@@ -1,48 +1,46 @@
 from datetime import datetime, timedelta
-
+import os
+import hashlib
+import hmac
 from jose import jwt
-from passlib.context import CryptContext
 
-SECRET_KEY = "CHANGE_THIS_LATER"
+SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key-for-development-only-change-in-production")
+print("SECURITY SECRET:", os.getenv("SECRET_KEY", "fallback-secret-key-for-development-only-change-in-production"))
 
 ALGORITHM = "HS256"
 
-ACCESS_TOKEN_EXPIRE_HOURS = 24
-
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
-
+ACCESS_TOKEN_EXPIRE_MINUTES = 15
+REFRESH_TOKEN_EXPIRE_DAYS = 7
 
 def hash_password(password: str):
+    """Hash password using HMAC-SHA256"""
+    return hmac.new(
+        SECRET_KEY.encode(),
+        password.encode(),
+        hashlib.sha256
+    ).hexdigest()
 
-    return pwd_context.hash(password)
 
-
-def verify_password(
-    plain_password,
-    hashed_password
-):
-
-    return pwd_context.verify(
-        plain_password,
+def verify_password(plain_password, hashed_password):
+    """Verify password using HMAC-SHA256"""
+    return hmac.compare_digest(
+        hash_password(plain_password),
         hashed_password
     )
 
 
 def create_access_token(data: dict):
-
     to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    expire = datetime.utcnow() + timedelta(
-        hours=ACCESS_TOKEN_EXPIRE_HOURS
-    )
+    to_encode.update({"exp": expire, "type": "access"})
 
-    to_encode.update({"exp": expire})
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-    return jwt.encode(
-        to_encode,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
+def create_refresh_token(data: dict):
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+
+    to_encode.update({"exp": expire, "type": "refresh"})
+
+    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

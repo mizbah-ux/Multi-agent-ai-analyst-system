@@ -1,28 +1,23 @@
 from fastapi import APIRouter, HTTPException , Depends
 from auth.dependencies import get_optional_user
-from pydantic import BaseModel
-from typing import List
+from agents.data_agent import run_data_cleaning
+from auth.dependencies import get_current_user
+from models.schemas import User
 from auth.dependencies import verify_internal_key
 
 
 router = APIRouter()
 
-# ✅ Define schema
-class PPTRequest(BaseModel):
-    file_id: str
-    charts: List[str]
 
-
-@router.post("/agent/ppt")
-def create_ppt(
+@router.post("/agent/data-clean")
+def data_clean(
     data: dict,
     _ = Depends(verify_internal_key)
 ):
 
     try:
-
-        result = {"message": "PPT generated successfully", "data": data}
+        result = run_data_cleaning(data["file_id"])
         return {"result": result}
     except Exception as e:
-        print("PPT GENERATION ERROR:", str(e))
+        print("DATA CLEANING ERROR:", str(e))
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,0 +1,264 @@
+{
+  "analysis_request": "analyze",
+  "analysis": {
+    "row_count": 1000,
+    "column_count": 20,
+    "columns": [
+      "order_id",
+      "customer_id",
+      "restaurant_id",
+      "city",
+      "cuisine_type",
+      "customer_segment",
+      "order_datetime",
+      "order_value",
+      "discount_applied",
+      "delivery_fee",
+      "final_amount",
+      "payment_method",
+      "preparation_time_min",
+      "delivery_time_min",
+      "delivery_status",
+      "customer_rating",
+      "distance_km",
+      "rider_id",
+      "tip_amount",
+      "promo_code_used"
+    ],
+    "numeric_summary": {
+      "order_value": {
+        "min": 151.7,
+        "max": 2495.51,
+        "mean": 1351.3855099999998,
+        "median": 1346.33,
+        "std": 692.0976270540983
+      },
+      "discount_applied": {
+        "min": 0.06,
+        "max": 609.32,
+        "mean": 168.70987,
+        "median": 130.695,
+        "std": 140.63111014147162
+      },
+      "delivery_fee": {
+        "min": 20.01,
+        "max": 119.68,
+        "mean": 68.84782999999999,
+        "median": 68.00999999999999,
+        "std": 29.06569769287284
+      },
+      "final_amount": {
+        "min": 190.11,
+        "max": 2526.58,
+        "mean": 1251.5234699999999,
+        "median": 1245.435,
+        "std": 616.4240930638327
+      },
+      "preparation_time_min": {
+        "min": 10.0,
+        "max": 40.0,
+        "mean": 24.738,
+        "median": 25.0,
+        "std": 8.922273418975848
+      },
+      "delivery_time_min": {
+        "min": 20.0,
+        "max": 90.0,
+        "mean": 55.196,
+        "median": 55.5,
+        "std": 15.214436008707754
+      },
+      "customer_rating": {
+        "min": 1.0,
+        "max": 5.0,
+        "mean": 3.011,
+        "median": 3.0,
+        "std": 1.4045824475095265
+      },
+      "distance_km": {
+        "min": 1.0,
+        "max": 19.99,
+        "mean": 10.21284,
+        "median": 10.195,
+        "std": 5.479850408076382
+      },
+      "tip_amount": {
+        "min": 0.8,
+        "max": 199.62,
+        "mean": 99.72474,
+        "median": 98.71000000000001,
+        "std": 56.911412396753896
+      }
+    },
+    "categorical_summary": {
+      "order_id": {
+        "ORD000001": 1,
+        "ORD000672": 1,
+        "ORD000659": 1,
+        "ORD000660": 1,
+        "ORD000661": 1
+      },
+      "customer_id": {
+        "CUST8471": 3,
+        "CUST4262": 3,
+        "CUST5762": 3,
+        "CUST9151": 3,
+        "CUST1052": 2
+      },
+      "restaurant_id": {
+        "REST498": 5,
+        "REST675": 5,
+        "REST886": 5,
+        "REST504": 4,
+        "REST885": 4
+      },
+      "city": {
+        "Delhi": 183,
+        "Hyderabad": 178,
+        "Pune": 165,
+        "Bengaluru": 161,
+        "Mumbai": 158
+      },
+      "cuisine_type": {
+        "Desserts": 172,
+        "Fast Food": 172,
+        "Chinese": 167,
+        "South Indian": 166,
+        "Italian": 163
+      }
+    },
+    "data_quality": {
+      "duplicate_rows": 0,
+      "missing_by_column": {}
+    },
+    "correlation": {
+      "order_value": {
+        "order_value": 1.0,
+        "discount_applied": 0.6190144371453093,
+        "delivery_fee": 0.027968321623533948,
+        "final_amount": 0.9828588226244159,
+        "preparation_time_min": -0.03197681806005336,
+        "delivery_time_min": -0.02468530649288468,
+        "customer_rating": 0.0175527095568969,
+        "distance_km": 0.01315828145759839,
+        "tip_amount": 0.0662448738076751
+      },
+      "discount_applied": {
+        "order_value": 0.6190144371453093,
+        "discount_applied": 1.0,
+        "delivery_fee": 0.03299149821984855,
+        "final_amount": 0.4684213954025616,
+        "preparation_time_min": 0.013021577975709924,
+        "delivery_time_min": 0.016100595415531566,
+        "customer_rating": 0.003916533851468308,
+        "distance_km": -0.014611818955532823,
+        "tip_amount": -0.0020502482048009316
+      },
+      "delivery_fee": {
+        "order_value": 0.027968321623533948,
+        "discount_applied": 0.03299149821984855,
+        "delivery_fee": 1.0,
+        "final_amount": 0.0710271973369882,
+        "preparation_time_min": 0.005632670160485901,
+        "delivery_time_min": 0.04681238067341587,
+        "customer_rating": -0.012107982769484082,
+        "distance_km": 0.002025382446008175,
+        "tip_amount": -0.018543520468742844
+      },
+      "final_amount": {
+        "order_value": 0.9828588226244159,
+        "discount_applied": 0.4684213954025616,
+        "delivery_fee": 0.0710271973369882,
+        "final_amount": 1.0,
+        "preparation_time_min": -0.038607513311568004,
+        "delivery_time_min": -0.029181617577127603,
+        "customer_rating": 0.01824308181485473,
+        "distance_km": 0.018202664324709943,
+        "tip_amount": 0.0739706134151202
+      },
+      "preparation_time_min": {
+        "order_value": -0.03197681806005336,
+        "discount_applied": 0.013021577975709924,
+        "delivery_fee": 0.005632670160485901,
+        "final_amount": -0.038607513311568004,
+        "preparation_time_min": 1.0,
+        "delivery_time_min": 0.629167013099953,
+        "customer_rating": -0.0061598126722963616,
+        "distance_km": 0.017511609225239286,
+        "tip_amount": 0.007508469545812412
+      },
+      "delivery_time_min": {
+        "order_value": -0.02468530649288468,
+        "discount_applied": 0.016100595415531566,
+        "delivery_fee": 0.04681238067341587,
+        "final_amount": -0.029181617577127603,
+        "preparation_time_min": 0.629167013099953,
+        "delivery_time_min": 1.0,
+        "customer_rating": -0.012373481022564935,
+        "distance_km": 0.0282976182675125,
+        "tip_amount": 0.02317877280856986
+      },
+      "customer_rating": {
+        "order_value": 0.0175527095568969,
+        "discount_applied": 0.003916533851468308,
+        "delivery_fee": -0.012107982769484082,
+        "final_amount": 0.01824308181485473,
+        "preparation_time_min": -0.0061598126722963616,
+        "delivery_time_min": -0.012373481022564935,
+        "customer_rating": 1.0,
+        "distance_km": 0.016121141689060862,
+        "tip_amount": 0.007269607745146073
+      },
+      "distance_km": {
+        "order_value": 0.01315828145759839,
+        "discount_applied": -0.014611818955532823,
+        "delivery_fee": 0.002025382446008175,
+        "final_amount": 0.018202664324709943,
+        "preparation_time_min": 0.017511609225239286,
+        "delivery_time_min": 0.0282976182675125,
+        "customer_rating": 0.016121141689060862,
+        "distance_km": 1.0,
+        "tip_amount": 0.0069623796243807
+      },
+      "tip_amount": {
+        "order_value": 0.0662448738076751,
+        "discount_applied": -0.0020502482048009316,
+        "delivery_fee": -0.018543520468742844,
+        "final_amount": 0.0739706134151202,
+        "preparation_time_min": 0.007508469545812412,
+        "delivery_time_min": 0.02317877280856986,
+        "customer_rating": 0.007269607745146073,
+        "distance_km": 0.0069623796243807,
+        "tip_amount": 1.0
+      }
+    },
+    "request_alignment": {
+      "request": "analyze",
+      "terms": [],
+      "matched_columns": [],
+      "insights": [
+        "Request received: analyze",
+        "No direct column-name matches were found; analysis used overall dataset patterns."
+      ]
+    },
+    "business_summary": "The dataset contains 1000 records across 20 fields. Primary numeric signal 'order_value' has mean 1351.39, median 1346.33, and range 151.70 to 2495.51. In categorical patterns, 'order_id' is led by 'ORD000001' with 1 records. No material missing-value risk was detected after cleaning. The narrative and insights were aligned to the user analysis request."
+  },
+  "charts": [
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_order_value_hist.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_discount_applied_hist.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_delivery_fee_hist.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_final_amount_hist.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_city_bar.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_cuisine_type_bar.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_customer_segment_bar.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_heatmap.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_scatter.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_order_value_boxplot.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_discount_applied_boxplot.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_delivery_fee_boxplot.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_city_pie.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_cuisine_type_pie.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_order_value_line.png",
+    "charts/e1cbac24-ee86-4c8d-9c55-45ec54e1638b_order_value_time_trend.png"
+  ]
+}

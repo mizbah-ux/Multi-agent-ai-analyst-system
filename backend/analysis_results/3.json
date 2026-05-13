@@ -1,0 +1,140 @@
+{
+  "analysis_request": "test live logs async",
+  "analysis": {
+    "row_count": 200,
+    "column_count": 20,
+    "columns": [
+      "id",
+      "birthdate",
+      "deathdate",
+      "prefix",
+      "first",
+      "last",
+      "suffix",
+      "maiden",
+      "marital",
+      "race",
+      "ethnicity",
+      "gender",
+      "birthplace",
+      "address",
+      "city",
+      "state",
+      "county",
+      "zip",
+      "lat",
+      "lon"
+    ],
+    "numeric_summary": {
+      "zip": {
+        "min": 2043.0,
+        "max": 2467.0,
+        "mean": 2143.365,
+        "median": 2131.5,
+        "std": 58.901197187754626
+      },
+      "lat": {
+        "min": 42.20830837583019,
+        "max": 42.48727483269824,
+        "mean": 42.334644219240914,
+        "median": 42.341957657327484,
+        "std": 0.04988564001239622
+      },
+      "lon": {
+        "min": -71.16564805,
+        "max": -70.76346235,
+        "mean": -71.0283092491,
+        "median": -71.04036965,
+        "std": 0.075951671633875
+      }
+    },
+    "categorical_summary": {
+      "id": {
+        "5605b66b-e92d-c16c-1b83-b8bf7040d51f": 1,
+        "814d792a-34dc-914b-d260-fe697866957a": 1,
+        "313d2627-15e7-c9a3-489b-dfaf1a8cf138": 1,
+        "d14b5ecd-e7c8-4f73-75a5-bbdc79917c94": 1,
+        "86e36715-1b85-289d-83d3-790a7bcf51bd": 1
+      },
+      "birthdate": {
+        "1929-01-28": 4,
+        "1928-12-25": 3,
+        "1927-02-05": 3,
+        "1925-11-16": 3,
+        "1982-08-09": 2
+      },
+      "deathdate": {
+        "unknown": 158,
+        "2018-02-18": 1,
+        "2018-10-31": 1,
+        "2021-01-02": 1,
+        "2020-08-29": 1
+      },
+      "prefix": {
+        "Mr.": 101,
+        "Mrs.": 76,
+        "Ms.": 23
+      },
+      "first": {
+        "Keva141": 2,
+        "James276": 2,
+        "Levi940": 1,
+        "Roxane435": 1,
+        "Eldon28": 1
+      }
+    },
+    "data_quality": {
+      "duplicate_rows": 0,
+      "missing_by_column": {}
+    },
+    "correlation": {
+      "zip": {
+        "zip": 1.0,
+        "lat": 0.020432557222523205,
+        "lon": -0.17123587576985963
+      },
+      "lat": {
+        "zip": 0.020432557222523205,
+        "lat": 1.0,
+        "lon": -0.5414732798574011
+      },
+      "lon": {
+        "zip": -0.17123587576985963,
+        "lat": -0.5414732798574011,
+        "lon": 1.0
+      }
+    },
+    "request_alignment": {
+      "request": "test live logs async",
+      "terms": [
+        "test",
+        "live",
+        "logs",
+        "async"
+      ],
+      "matched_columns": [],
+      "insights": [
+        "Request received: test live logs async",
+        "No direct column-name matches were found; analysis used overall dataset patterns."
+      ]
+    },
+    "business_summary": "The dataset contains 200 records across 20 fields. Primary numeric signal 'zip' has mean 2143.36, median 2131.50, and range 2043.00 to 2467.00. In categorical patterns, 'id' is led by '5605b66b-e92d-c16c-1b83-b8bf7040d51f' with 1 records. No material missing-value risk was detected after cleaning. The narrative and insights were aligned to the user analysis request."
+  },
+  "charts": [
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_zip_hist.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_lat_hist.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_lon_hist.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_deathdate_bar.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_prefix_bar.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_suffix_bar.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_heatmap.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_scatter.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_zip_boxplot.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_lat_boxplot.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_lon_boxplot.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_deathdate_pie.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_prefix_pie.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_zip_line.png",
+    "charts/e68a963e-1550-46e6-9140-22c0b5508439_zip_time_trend.png"
+  ]
+}

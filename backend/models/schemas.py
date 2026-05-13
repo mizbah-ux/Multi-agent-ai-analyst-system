@@ -3,7 +3,23 @@ from datetime import datetime
 from services.db_service import Base
 from datetime import datetime
 
+role = Column(String, default="user")
+refresh_token = Column(String, nullable=True)
 
+class User(Base):
+
+    __tablename__ = "users"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(Integer, primary_key=True, index=True)
+
+    email = Column(String, unique=True, nullable=False)
+
+    hashed_password = Column(String, nullable=False)
+
+    role = Column(String, default="user")
+
+    refresh_token = Column(String, nullable=True)
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -29,23 +45,3 @@ class Log(Base):
     status = Column(String)  # running / completed / failed
     timestamp = Column(DateTime, default=datetime.utcnow)
 
-class User(Base):
-
-    __tablename__ = "users"
-
-    id = Column(
-        Integer,
-        primary_key=True,
-        index=True
-    )
-
-    email = Column(
-        String,
-        unique=True,
-        nullable=False
-    )
-
-    hashed_password = Column(
-        String,
-        nullable=False
-    )
