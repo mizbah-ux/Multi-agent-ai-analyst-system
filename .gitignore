@@ -87,3 +87,9 @@ backend/_codex*.db
 # n8n (if local)
 n8n/node_modules/
 n8n/.env
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
