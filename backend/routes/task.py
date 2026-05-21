@@ -3,15 +3,17 @@ from services.db_service import SessionLocal
 from models.schemas import Task
 import json
 import threading
+from datetime import datetime
 from auth.dependencies import get_current_user
 from models.schemas import User
 from services.pipeline_service import run_pipeline
 from services.log_service import log_event
+from core.config import settings
 router = APIRouter()
 #N8N_WEBHOOK = "http://localhost:5678/webhook/task-trigger"
 
 
-def _run_task_pipeline(task_id: int, file_id: str, user_input: str):
+def _run_task_pipeline(task_id: int, file_id: str, user_input: str, user_id: int):
     db = SessionLocal()
     task = db.query(Task).filter(Task.id == task_id).first()
 
@@ -20,15 +22,15 @@ def _run_task_pipeline(task_id: int, file_id: str, user_input: str):
         return
 
     try:
-        result = run_pipeline(task_id, file_id, user_request=user_input)
-        task.result_path = result["analysis_path"]
-        task.ppt_path = result["ppt"]
-        task.status = "completed"
-        db.commit()
+        run_pipeline(task_id, file_id, user_request=user_input, user_id=user_id)
     except Exception as e:
         task.status = "failed"
+        task.state = "FAILED"
+        task.error_message = str(e)
+        task.completed_at = datetime.utcnow()
+        task.updated_at = datetime.utcnow()
         db.commit()
-        log_event(task_id, "Report", f"Pipeline failed: {str(e)}", "failed")
+        log_event(task_id, "Orchestrator", f"Pipeline failed: {str(e)}", "failed")
     finally:
         db.close()
 
@@ -51,7 +53,12 @@ def create_task(
         user_id=current_user.id,
         user_input=user_input,
         file_id=file_id,
-        status="running"
+        status="pending",
+        state="PENDING",
+        retry_count=0,
+        max_retries=settings.DEFAULT_MAX_RETRIES,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow(),
     )
 
     db.add(task)
@@ -60,7 +67,7 @@ def create_task(
 
     worker = threading.Thread(
         target=_run_task_pipeline,
-        args=(task.id, file_id, user_input),
+        args=(task.id, file_id, user_input, current_user.id),
         daemon=True
     )
     worker.start()
@@ -69,7 +76,8 @@ def create_task(
 
     return {
         "task_id": task.id,
-        "status": task.status
+        "status": task.status,
+        "state": task.state
     }
 
 @router.get("/task/{task_id}/result")
@@ -117,6 +125,9 @@ def complete_task(
         )
 
     task.status = "completed"
+    task.state = "COMPLETED"
+    task.completed_at = datetime.utcnow()
+    task.updated_at = datetime.utcnow()
 
     db.commit()
 
@@ -147,11 +158,19 @@ def get_task_status(
         )
 
     status = task.status
+    state = task.state
+    retry_count = task.retry_count
+    validation_status = task.validation_status
+    confidence_score = task.confidence_score
 
     db.close()
 
     return {
-        "status": status
+        "status": status,
+        "state": state,
+        "retry_count": retry_count,
+        "validation_status": validation_status,
+        "confidence_score": confidence_score
     }
 
 @router.get("/task/{task_id}/analysis")

@@ -23,6 +23,9 @@ def get_tasks(
         "id": t.id,
         "input": t.user_input,
         "status": t.status,
+        "state": t.state,
+        "confidence": t.confidence_score,
+        "validation_status": t.validation_status,
         "result": t.result_path,
         "ppt": t.ppt_path
     }

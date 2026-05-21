@@ -3,116 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - InsightForge AI</title>
+    <title>Sign Up - FlowIQ</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Google+Sans+Display:wght@400;500&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        .auth-card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .auth-header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        .auth-header p {
-            color: #666;
-            font-size: 16px;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-            font-weight: 500;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-color: #4285f4;
-        }
-        .btn {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .btn-primary {
-            background: #4285f4;
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #3367d6;
-        }
-        .btn-secondary {
-            background: #f8f9fa;
-            color: #333;
-            margin-top: 10px;
-        }
-        .btn-secondary:hover {
-            background: #e9ecef;
-        }
-        .auth-footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-        }
-        .auth-footer a {
-            color: #4285f4;
-            text-decoration: none;
-        }
-        .auth-footer a:hover {
-            text-decoration: underline;
-        }
-        .error-message {
-            color: #d93025;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-        .success-message {
-            color: #1e8e3e;
-            font-size: 14px;
-            margin-top: 5px;
-            display: none;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="auth-page">
     <div class="auth-container">
+        <div class="auth-orb auth-orb-one" aria-hidden="true"></div>
+        <div class="auth-orb auth-orb-two" aria-hidden="true"></div>
+        <div class="auth-visual" aria-hidden="true">
+            <div class="brand">
+                <span class="brand-mark"></span>
+                <div>
+                    <p class="brand-name">FlowIQ</p>
+                    <p class="brand-sub">Autonomous Work OS</p>
+                </div>
+            </div>
+            <h2>Build your AI workforce.</h2>
+            <p>Create the control layer for coordinated agents, autonomous reporting, and self-improving analytics workflows.</p>
+            <div class="auth-signal-grid">
+                <span>Neural routing</span>
+                <span>Task decomposition</span>
+                <span>Live orchestration</span>
+                <span>Adaptive reporting</span>
+            </div>
+        </div>
         <div class="auth-card">
             <div class="auth-header">
                 <h1>Create Account</h1>
-                <p>Join InsightForge AI to start analyzing your data</p>
+                <p>Join FlowIQ to start analyzing your data</p>
             </div>
             
             <form id="signupForm" onsubmit="handleSignup(event)">

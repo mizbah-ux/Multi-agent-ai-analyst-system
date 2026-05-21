@@ -1,0 +1,170 @@
+{
+  "analysis_request": "analyse decease speread rate in pie chart",
+  "analysis": {
+    "row_count": 974,
+    "column_count": 20,
+    "columns": [
+      "id",
+      "birthdate",
+      "deathdate",
+      "prefix",
+      "first",
+      "last",
+      "suffix",
+      "maiden",
+      "marital",
+      "race",
+      "ethnicity",
+      "gender",
+      "birthplace",
+      "address",
+      "city",
+      "state",
+      "county",
+      "zip",
+      "lat",
+      "lon"
+    ],
+    "numeric_summary": {
+      "zip": {
+        "min": 1801.0,
+        "max": 2472.0,
+        "mean": 2149.881930184805,
+        "median": 2135.0,
+        "std": 70.00936233067577
+      },
+      "lat": {
+        "min": 42.204921193402214,
+        "max": 42.49546445415797,
+        "mean": 42.33735872413591,
+        "median": 42.34379362938431,
+        "std": 0.04759389837590086
+      },
+      "lon": {
+        "min": -71.16564805,
+        "max": -70.73082425,
+        "mean": -71.02752362432238,
+        "median": -71.038397365,
+        "std": 0.06937506046005916
+      }
+    },
+    "categorical_summary": {
+      "id": {
+        "5605b66b-e92d-c16c-1b83-b8bf7040d51f": 1,
+        "1c108ed8-584c-711e-723a-37239da0981b": 1,
+        "124708bf-0f78-e8a7-bcc9-a2dbbe22b05e": 1,
+        "9928fc0c-85b6-319d-f9cb-ab465c34bcdf": 1,
+        "010ff9c1-564b-6e32-09f4-29cb4224bba9": 1
+      },
+      "birthdate": {
+        "1925-11-17": 4,
+        "1927-04-22": 4,
+        "1929-05-15": 4,
+        "1929-01-28": 4,
+        "1936-01-12": 4
+      },
+      "deathdate": {
+        "unknown": 820,
+        "2017-09-29": 2,
+        "2014-10-19": 2,
+        "2016-01-31": 2,
+        "2012-01-26": 2
+      },
+      "prefix": {
+        "Mr.": 494,
+        "Mrs.": 386,
+        "Ms.": 94
+      },
+      "first": {
+        "Domenic627": 3,
+        "Beatriz277": 3,
+        "Franklyn361": 3,
+        "Jos\u221a\u00a9 Emilio366": 3,
+        "Gregorio366": 3
+      }
+    },
+    "data_quality": {
+      "duplicate_rows": 0,
+      "missing_by_column": {}
+    },
+    "correlation": {
+      "zip": {
+        "zip": 1.0,
+        "lat": 0.002924386408025733,
+        "lon": -0.20097528975299658
+      },
+      "lat": {
+        "zip": 0.002924386408025733,
+        "lat": 1.0,
+        "lon": -0.4833695987067757
+      },
+      "lon": {
+        "zip": -0.20097528975299658,
+        "lat": -0.4833695987067757,
+        "lon": 1.0
+      }
+    },
+    "request_alignment": {
+      "request": "analyse decease speread rate in pie chart",
+      "terms": [
+        "analyse",
+        "decease",
+        "speread",
+        "rate",
+        "pie",
+        "chart"
+      ],
+      "matched_columns": [],
+      "insights": [
+        "Request received: analyse decease speread rate in pie chart",
+        "No direct column-name matches were found; analysis used overall dataset patterns."
+      ]
+    },
+    "business_summary": "The dataset contains 974 records across 20 fields. Primary numeric signal 'zip' has mean 2149.88, median 2135.00, and range 1801.00 to 2472.00. In categorical patterns, 'id' is led by '5605b66b-e92d-c16c-1b83-b8bf7040d51f' with 1 records. No material missing-value risk was detected after cleaning. The narrative and insights were aligned to the user analysis request."
+  },
+  "charts": [
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_zip_hist.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_lat_hist.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_lon_hist.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_deathdate_bar.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_prefix_bar.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_suffix_bar.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_heatmap.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_scatter.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_zip_boxplot.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_lat_boxplot.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_lon_boxplot.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_deathdate_pie.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_prefix_pie.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_zip_line.png",
+    "charts/2734a530-db6b-4b5a-9aa7-9b067c16ab17_zip_time_trend.png"
+  ],
+  "cleaning": {
+    "file_id": "2734a530-db6b-4b5a-9aa7-9b067c16ab17",
+    "original_rows": 974,
+    "cleaned_rows": 974,
+    "columns": [
+      "id",
+      "birthdate",
+      "deathdate",
+      "prefix",
+      "first",
+      "last",
+      "suffix",
+      "maiden",
+      "marital",
+      "race",
+      "ethnicity",
+      "gender",
+      "birthplace",
+      "address",
+      "city",
+      "state",
+      "county",
+      "zip",
+      "lat",
+      "lon"
+    ],
+    "cleaned_file_path": "cleaned/2734a530-db6b-4b5a-9aa7-9b067c16ab17_cleaned.csv"
+  }
+}

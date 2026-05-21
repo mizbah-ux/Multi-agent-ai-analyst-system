@@ -4,6 +4,7 @@ import uuid
 import pandas as pd
 from auth.dependencies import get_current_user
 from models.schemas import User
+from memory.retrieval_service import retrieval_service
 
 router = APIRouter()
 
@@ -54,6 +55,16 @@ async def upload_file(
     except Exception as e:
         os.remove(file_path)
         raise HTTPException(status_code=400, detail=f"Invalid file: {str(e)}")
+
+    try:
+        retrieval_service.ingest_file(
+            file_path,
+            namespace=retrieval_service.user_namespace(current_user.id),
+            metadata={"file_id": file_id, "original_filename": file.filename},
+        )
+    except Exception:
+        # RAG indexing should enrich uploads, not block the legacy CSV workflow.
+        pass
 
     return {
         "file_id": file_id,

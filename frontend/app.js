@@ -45,15 +45,22 @@ async function resolveApiBase() {
 }
 
 function applyStoredTheme() {
-    const saved = localStorage.getItem("theme") || "light";
+    const saved = localStorage.getItem("theme") ||
+        (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     document.documentElement.setAttribute("data-theme", saved);
     updateThemeToggleText(saved);
 }
 
 function updateThemeToggleText(theme) {
     const el = document.getElementById("themeToggleText");
+    const toggle = document.getElementById("themeToggle");
     if (el) {
-        el.textContent = theme === "dark" ? "Light" : "Dark";
+        el.textContent = theme === "dark" ? "Dark mode active" : "Light mode active";
+    }
+    if (toggle) {
+        toggle.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+        toggle.dataset.mode = theme;
+        toggle.title = theme === "dark" ? "Switch to light mode" : "Switch to dark mode";
     }
 }
 

@@ -3,9 +3,9 @@ import os
 import hashlib
 import hmac
 from jose import jwt
+from core.config import settings
 
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback-secret-key-for-development-only-change-in-production")
-print("SECURITY SECRET:", os.getenv("SECRET_KEY", "fallback-secret-key-for-development-only-change-in-production"))
+SECRET_KEY = os.getenv("SECRET_KEY") or settings.SECRET_KEY
 
 ALGORITHM = "HS256"
 

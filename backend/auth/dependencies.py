@@ -13,7 +13,6 @@ from auth.security import (
 
 
 security = HTTPBearer()
-print("DEPENDENCY SECRET:", os.getenv("SECRET_KEY"))
 
 def get_optional_user(request: Request):
     from jose import jwt, JWTError
@@ -85,6 +84,7 @@ def get_current_user(
         user = db.query(User).filter(
             User.id == user_id
         ).first()
+        db.close()
 
         if not user:
 

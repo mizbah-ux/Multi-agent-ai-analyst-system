@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InsightForge AI</title>
+    <title>FlowIQ</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="app-atmosphere" aria-hidden="true"></div>
 <div class="app-shell">
     <aside class="sidebar" id="sidebar">
         <div class="brand">
             <span class="brand-mark"></span>
             <div>
-                <p class="brand-name">InsightForge AI</p>
-                <p class="brand-sub">Data Analysis Workspace</p>
+                <p class="brand-name">FlowIQ</p>
+                <p class="brand-sub">Orchestration Workspace</p>
             </div>
         </div>
 
@@ -41,12 +42,18 @@
     <main class="main-content">
         <header class="topbar">
             <div>
-                <h1 class="page-title">InsightForge AI</h1>
-                <p class="page-subtitle">AI multi-agent analytics and reporting platform</p>
+                <h1 class="page-title">FlowIQ</h1>
+                <p class="page-subtitle">AI workflow orchestration, analytics, and reporting</p>
             </div>
             <div class="topbar-actions">
-                <button id="themeToggle" class="icon-btn" title="Toggle color mode" onclick="toggleTheme()">
-                    <span id="themeToggleText">Dark</span>
+                <button id="themeToggle" class="theme-switch" type="button" title="Toggle color mode" aria-label="Toggle color mode" onclick="toggleTheme()">
+                    <span class="theme-switch-label">Theme</span>
+                    <span class="theme-switch-track" aria-hidden="true">
+                        <span class="theme-switch-option">Light</span>
+                        <span class="theme-switch-option">Dark</span>
+                        <span class="theme-switch-thumb"></span>
+                    </span>
+                    <span id="themeToggleText" class="sr-only">Light mode</span>
                 </button>
             </div>
         </header>
@@ -148,9 +155,15 @@
 
 <div id="loadingOverlay" class="loading-overlay">
     <div class="loading-box">
-        <div class="loading-spinner"></div>
+        <div class="thinking-loader" id="thinkingLoader" aria-hidden="true">
+            <svg viewBox="0 0 100 100" fill="none">
+                <g id="thinkingLoaderGroup">
+                    <path id="thinkingLoaderPath" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"></path>
+                </g>
+            </svg>
+        </div>
         <p id="loadingTitle" class="loading-title">Processing...</p>
-        <p class="loading-subtitle">Pipeline execution in progress</p>
+        <p class="loading-subtitle">Agents are coordinating the workflow</p>
     </div>
 </div>
 

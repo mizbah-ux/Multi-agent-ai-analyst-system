@@ -54,16 +54,11 @@ def signup(data: dict):
 
 @router.post("/login")
 def login(data: dict):
-
-    print("LOGIN INPUT:", data)
-
     db: Session = SessionLocal()
 
     user = db.query(User).filter(
         User.email == data["email"]
     ).first()
-
-    print("USER FOUND:", user)
 
     if not user:
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -72,8 +67,6 @@ def login(data: dict):
         data["password"],
         user.hashed_password
     )
-
-    print("PASSWORD VALID:", valid)
 
     if not valid:
         raise HTTPException(status_code=401, detail="Invalid credentials")
@@ -92,10 +85,7 @@ def login(data: dict):
     user.refresh_token = refresh_token
     user_role = user.role
     db.commit()
-    print("ROLE VALUE:", user_role)
     db.close()
-
-    print("RETURNING RESPONSE")   # 👈 MUST PRINT
 
     return {
         "access_token": access_token,

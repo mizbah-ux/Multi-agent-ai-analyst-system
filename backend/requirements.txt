@@ -146,3 +146,12 @@ Werkzeug==3.1.6
 xlsxwriter==3.2.9
 yfinance==0.2.66
 zipp==3.23.0
+celery>=5.4.0
+chromadb>=0.5.0
+langchain>=0.3.0
+langgraph>=0.2.0
+openai>=1.99.0
+prometheus-client>=0.20.0
+pypdf>=4.3.1
+python-docx>=1.1.2
+redis>=5.0.0

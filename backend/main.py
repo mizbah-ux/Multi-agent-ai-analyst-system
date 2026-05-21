@@ -15,10 +15,14 @@ from routes.download import router as download_router
 from routes.ppt import router as ppt_router
 from auth.routes import router as auth_router
 from routes.admin import router as admin_router
+from routes.platform import router as platform_router
+from routes.rag import router as rag_router
+from routes.metrics import router as metrics_router
 from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
+from security.rate_limiter import RateLimitMiddleware
 
-app = FastAPI(title="AI Analyst System")
+app = FastAPI(title="FlowIQ Orchestration Platform")
 
 
 def custom_openapi():
@@ -26,9 +30,9 @@ def custom_openapi():
         return app.openapi_schema
 
     openapi_schema = get_openapi(
-        title="AI Analyst System",
-        version="1.0.0",
-        description="Secure API with JWT",
+        title="FlowIQ Orchestration Platform",
+        version="2.0.0",
+        description="Secure AI workflow orchestration API with JWT, memory, tools, events, and evaluation.",
         routes=app.routes,
     )
 
@@ -57,6 +61,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(RateLimitMiddleware)
 
 # Initialize the database
 init_db()
@@ -75,8 +80,11 @@ app.include_router(download_router)
 app.include_router(ppt_router)
 app.include_router(auth_router)
 app.include_router(admin_router)
+app.include_router(platform_router)
+app.include_router(rag_router)
+app.include_router(metrics_router)
 app.mount("/charts", StaticFiles(directory="charts"), name="charts")
 
 @app.get("/")
 def root():
-    return {"message": "AI Analyst System Running"}
+    return {"message": "FlowIQ Orchestration Platform Running"}

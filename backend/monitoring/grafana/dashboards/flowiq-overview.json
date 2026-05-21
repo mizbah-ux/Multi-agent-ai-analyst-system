@@ -1,0 +1,33 @@
+{
+  "title": "FlowIQ Overview",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "stat",
+      "title": "Completed Tasks",
+      "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        { "expr": "flowiq_tasks_total{status=\"completed\"}", "refId": "A" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Failed Tasks",
+      "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+      "targets": [
+        { "expr": "flowiq_tasks_total{status=\"failed\"}", "refId": "A" }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Task Latency",
+      "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
+      "targets": [
+        { "expr": "histogram_quantile(0.95, rate(flowiq_task_latency_seconds_bucket[5m]))", "refId": "A" }
+      ]
+    }
+  ]
+}
+

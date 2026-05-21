@@ -72,6 +72,13 @@ reports/*
 !reports/.gitkeep
 charts/*
 !charts/.gitkeep
+memory_store/
+vector_store/
+rag_uploads/
+backend/memory_store/
+backend/vector_store/
+backend/rag_uploads/
+backend/_codex*.db
 
 # Generated files
 *.csv
