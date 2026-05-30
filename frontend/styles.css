@@ -1499,8 +1499,8 @@ html[data-theme="light"] .loading-box {
 }
 
 .auth-visual p {
-    max-width: 660px;
-    margin: 28px 0 0;
+    max-width: 680px;
+    margin: 2px 0 0;
     color: var(--text-secondary);
     font-size: clamp(18px, 2.2vw, 28px);
     line-height: 1.28;
