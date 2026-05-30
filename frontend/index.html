@@ -4,196 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FlowIQ</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <meta http-equiv="refresh" content="0; url=landing.html">
+    <script>
+        // Redirect to landing page immediately
+        window.location.replace("landing.html");
+    </script>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #02040a;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #f7fbff;
+        }
+        .container {
+            text-align: center;
+        }
+        p {
+            margin: 1rem 0;
+        }
+        a {
+            color: #39f5ff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<div class="app-atmosphere" aria-hidden="true"></div>
-<div class="app-shell">
-    <aside class="sidebar" id="sidebar">
-        <div class="brand">
-            <span class="brand-mark"></span>
-            <div>
-                <p class="brand-name">FlowIQ</p>
-                <p class="brand-sub">Orchestration Workspace</p>
-            </div>
-        </div>
-
-        <nav class="sidebar-nav">
-            <button class="nav-item active" onclick="showSection('dashboard', this)">
-                <span>Dashboard</span>
-            </button>
-            <button class="nav-item" onclick="showSection('analysis', this)">
-                <span>Analysis</span>
-            </button>
-            <button class="nav-item" onclick="showSection('reports', this)">
-                <span>Reports</span>
-            </button>
-            <button class="nav-item" onclick="showSection('history', this)">
-                <span>Task History</span>
-            </button>
-        </nav>
-
-        <div class="sidebar-footer">
-            <button class="ghost-btn" onclick="logout()">Logout</button>
-        </div>
-    </aside>
-
-    <main class="main-content">
-        <header class="topbar">
-            <div>
-                <h1 class="page-title">FlowIQ</h1>
-                <p class="page-subtitle">AI workflow orchestration, analytics, and reporting</p>
-            </div>
-            <div class="topbar-actions">
-                <button id="themeToggle" class="theme-switch" type="button" title="Toggle color mode" aria-label="Toggle color mode" onclick="toggleTheme()">
-                    <span class="theme-switch-label">Theme</span>
-                    <span class="theme-switch-track" aria-hidden="true">
-                        <span class="theme-switch-option">Light</span>
-                        <span class="theme-switch-option">Dark</span>
-                        <span class="theme-switch-thumb"></span>
-                    </span>
-                    <span id="themeToggleText" class="sr-only">Light mode</span>
-                </button>
-            </div>
-        </header>
-
-        <section id="authCheck" class="auth-check hidden">
-            <p>Checking your session...</p>
-        </section>
-
-        <section id="dashboardSection" class="section-shell">
-            <div class="content-grid">
-                <div class="left-col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Upload Dataset</h2>
-                        </div>
-                        <div class="card-body">
-                            <label class="drop-zone" id="dropZone">
-                                <input type="file" id="fileInput" accept=".csv,.xlsx,.json" hidden>
-                                <p>Drop file here or click to select</p>
-                                <small>CSV, XLSX, JSON</small>
-                                <div class="file-selected hidden" id="fileSelected">
-                                    <span id="fileName"></span>
-                                </div>
-                            </label>
-                            <button class="btn btn-primary" id="uploadBtn" onclick="uploadFile()" disabled>Upload File</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header">
-                            <h2>Analysis Request</h2>
-                        </div>
-                        <div class="card-body">
-                            <textarea
-                                id="taskInput"
-                                rows="5"
-                                placeholder="Example: Compare revenue performance by region, highlight anomalies, and summarize operational risk areas."
-                            ></textarea>
-                            <button class="btn btn-accent" id="runBtn" onclick="createTask()" disabled>Run Analysis</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="right-col">
-                    <div class="card">
-                        <div class="card-header split">
-                            <h2>Agent Pipeline</h2>
-                            <span class="pill" id="pipelineState">Idle</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="pipeline-grid">
-                                <div class="agent-node" id="agent-Data">
-                                    <p class="agent-name">Data Agent</p>
-                                    <p class="agent-status" id="status-Data">Idle</p>
-                                </div>
-                                <div class="agent-node" id="agent-Analysis">
-                                    <p class="agent-name">Analysis Agent</p>
-                                    <p class="agent-status" id="status-Analysis">Idle</p>
-                                </div>
-                                <div class="agent-node" id="agent-Visualization">
-                                    <p class="agent-name">Visualization Agent</p>
-                                    <p class="agent-status" id="status-Visualization">Idle</p>
-                                </div>
-                                <div class="agent-node" id="agent-Report">
-                                    <p class="agent-name">Report Agent</p>
-                                    <p class="agent-status" id="status-Report">Idle</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header split">
-                            <h2>Live Activity Log</h2>
-                            <span class="pill" id="logCount">0 events</span>
-                        </div>
-                        <div class="card-body">
-                            <div class="logs-container" id="logs">
-                                <div class="logs-empty">No activity yet. Run an analysis to stream logs.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card hidden" id="resultCard">
-                        <div class="card-header">
-                            <h2>Exports</h2>
-                        </div>
-                        <div class="card-body" id="result"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="analysisSection" class="section-shell hidden"></section>
-        <section id="reportsSection" class="section-shell hidden"></section>
-        <section id="historySection" class="section-shell hidden"></section>
-    </main>
-</div>
-
-<div id="loadingOverlay" class="loading-overlay">
-    <div class="loading-box">
-        <div class="thinking-loader" id="thinkingLoader" aria-hidden="true">
-            <svg viewBox="0 0 100 100" fill="none">
-                <g id="thinkingLoaderGroup">
-                    <path id="thinkingLoaderPath" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" opacity="0.12"></path>
-                </g>
-            </svg>
-        </div>
-        <p id="loadingTitle" class="loading-title">Processing...</p>
-        <p class="loading-subtitle">Agents are coordinating the workflow</p>
+    <div class="container">
+        <p>Launching FlowIQ...</p>
+        <p><a href="landing.html">Click here if not redirected</a></p>
     </div>
-</div>
-
-<div id="exportPreviewModal" class="export-preview-modal hidden" role="dialog" aria-modal="true" aria-labelledby="exportPreviewTitle">
-    <div class="export-preview-backdrop" onclick="closeExportPreview()"></div>
-    <div class="export-preview-panel">
-        <div class="export-preview-header">
-            <div>
-                <p id="exportPreviewLabel" class="export-preview-label">Preview</p>
-                <h3 id="exportPreviewTitle">Export Preview</h3>
-            </div>
-            <button class="mini-btn" type="button" onclick="closeExportPreview()">Close</button>
-        </div>
-        <div id="exportPreviewBody" class="export-preview-body"></div>
-    </div>
-</div>
-
-<aside id="downloadPrompt" class="download-prompt" aria-live="polite">
-    <p class="download-title">Download ready</p>
-    <p id="downloadPromptText" class="download-text">Your export is prepared.</p>
-    <div class="download-actions">
-        <button class="mini-btn" type="button" onclick="dismissDownloadPrompt()">Not now</button>
-        <button class="mini-btn primary-action" type="button" onclick="confirmDownloadPrompt()">Download</button>
-    </div>
-</aside>
-
-<div id="toastContainer"></div>
-
-<script src="toast.js"></script>
-<script src="loading.js"></script>
-<script src="app.js"></script>
 </body>
 </html>

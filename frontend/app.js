@@ -75,7 +75,7 @@ function toggleTheme() {
 async function checkAuthentication() {
     const token = localStorage.getItem("access_token");
     if (!token) {
-        window.location.href = "login.html";
+        window.location.replace("landing.html");
         return;
     }
 
@@ -148,7 +148,7 @@ function logout() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("role");
-    window.location.href = "login.html";
+    window.location.href = "landing.html";
 }
 
 function bindUploadInteractions() {

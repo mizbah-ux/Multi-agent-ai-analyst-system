@@ -73,6 +73,20 @@
 
     <script src="toast.js"></script>
     <script>
+        // Redirect to landing if accessed directly without proper context
+        // Check if user should be here (not authenticated, but has come from signup flow)
+        const urlParams = new URLSearchParams(window.location.search);
+        const fromSignup = urlParams.get("from") === "signup";
+        const fromLanding = document.referrer.includes("landing.html");
+        
+        // If directly accessing login without any context, go to landing page first
+        if (!fromSignup && !fromLanding && !document.referrer) {
+            // Small delay to allow page to process, then redirect
+            setTimeout(() => {
+                window.location.replace("landing.html");
+            }, 100);
+        }
+
         let API = localStorage.getItem("api_base_url") || "http://localhost:8000";
 
         async function resolveApiBase() {
@@ -181,8 +195,8 @@
                     
                     // Redirect to dashboard after 1 second
                     setTimeout(() => {
-                        console.log('Redirecting to index.html...');
-                        window.location.href = 'index.html';
+                        console.log('Redirecting to dashboard.html...');
+                        window.location.href = 'dashboard.html';
                     }, 1000);
                     
                 } else {
@@ -265,7 +279,7 @@
             const token = localStorage.getItem('access_token');
             if (token) {
                 // User is already logged in, redirect to dashboard
-                window.location.href = 'index.html';
+                window.location.href = 'dashboard.html';
             }
         }
 
