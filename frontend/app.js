@@ -1,4 +1,4 @@
-let API = localStorage.getItem("api_base_url") || "http://localhost:8000";
+let API = localStorage.getItem("api_base_url") || "http://13.206.223.251";
 const AGENTS = ["Data", "Analysis", "Visualization", "Report"];
 
 let fileId = null;

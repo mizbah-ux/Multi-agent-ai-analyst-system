@@ -219,7 +219,7 @@
                 throw new Error('Authentication required. Please login first.');
             }
 
-            const response = await fetch(`http://localhost:8000/task/${taskId}/result`, {
+            const response = await fetch(`http://13.206.223.251/task/${taskId}/result`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
